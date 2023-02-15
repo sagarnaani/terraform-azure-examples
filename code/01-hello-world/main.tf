@@ -6,7 +6,7 @@ provider "azurerm" {
 # Create a Resource Group if it doesn’t exist
 resource "azurerm_resource_group" "tfexample" {
   name     = "my-terraform-rg"
-  location = "West Europe"
+  location = "East US"
 }
 
 # Create a Virtual Network
@@ -36,30 +36,3 @@ resource "azurerm_network_interface" "tfexample" {
     subnet_id                     = azurerm_subnet.tfexample.id
     private_ip_address_allocation = "Dynamic"
   }
-}
-
-# Create a Virtual Machine
-resource "azurerm_linux_virtual_machine" "tfexample" {
-  name                            = "my-terraform-vm"
-  location                        = azurerm_resource_group.tfexample.location
-  resource_group_name             = azurerm_resource_group.tfexample.name
-  network_interface_ids           = [azurerm_network_interface.tfexample.id]
-  size                            = "Standard_DS1_v2"
-  computer_name                   = "myvm"
-  admin_username                  = "azureuser"
-  admin_password                  = "Password1234!"
-  disable_password_authentication = false
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
-
-  os_disk {
-    name                 = "my-terraform-os-disk"
-    storage_account_type = "Standard_LRS"
-    caching              = "ReadWrite"
-  }
-}
